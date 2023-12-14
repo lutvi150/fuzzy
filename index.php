@@ -9,6 +9,8 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
     <link href="./assets/theme/gymove/xhtml/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/costume.css">
+    <link rel="stylesheet" href="./assets/sweetalert2/dist/sweetalert2.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 
@@ -31,14 +33,16 @@
                                     <form action="index.html">
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Username</strong></label>
-                                            <input type="text" class="form-control" value="">
+                                            <input type="text" class="form-control" id="username" value="">
+                                            <span class="text-error eusername"></span>
                                         </div>
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" value="">
+                                            <input type="password" class="form-control" id="password" value="">
+                                            <span class="text-error epassword"></span>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn bg-white text-primary btn-block">Login</button>
+                                            <button type="button" onclick="login()" class="btn bg-white text-primary btn-block">Login</button>
                                         </div>
                                     </form>
                                 </div>
@@ -55,11 +59,43 @@
         Scripts
     ***********************************-->
     <!-- Required vendors -->
+    <script src="./assets/js/jquery-3.7.1.min.js"></script>
     <script src="./assets/theme/gymove/xhtml/vendor/global/global.min.js"></script>
     <script src="./assets/theme/gymove/xhtml/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <script src="./assets/theme/gymove/xhtml/js/custom.min.js"></script>
     <script src="./assets/theme/gymove/xhtml/js/deznav-init.js"></script>
-
+    <script src="./assets/sweetalert2/dist/sweetalert2.js"></script>
+    <script>
+        login = () => {
+            $(".text-error").text("");
+            let username = $("#username").val();
+            let password = $("#password").val();
+            $.ajax({
+                type: "POST",
+                url: "core/login.php",
+                data: {
+                    username: username,
+                    password: password
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.status == true) {
+                        window.location.href = "admin.php";
+                    } else {
+                        $(".eusername").text(response.msg);
+                        $(".password").text(response.msg);
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Ada Sesuatu yang salah !",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
